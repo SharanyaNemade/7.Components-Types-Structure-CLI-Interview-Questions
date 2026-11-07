@@ -2,58 +2,344 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.7.
 
-## Development server
+This code is part of an Angular Component. It defines some of the configuration properties of a component.
 
-To start a local development server, run:
+Let's understand each property in detail, including why we use it and how it works.
 
-```bash
-ng serve
+typescript
+
+```typescript
+imports: [],
+selector: 'app-profile',
+standalone: true,
+templateUrl: './profile.html',
+styleUrl: './profile.css'
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 1. `imports: []`
 
-## Code scaffolding
+Meaning: Specifies which other Angular components, directives, or pipes this component needs to use in its HTML template.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+In Angular, when you create a standalone component, you must explicitly import the Angular features that you want to use.
 
-```bash
-ng generate component component-name
+For example:
+
+typescript
+
+```typescript
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-profile',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './profile.html',
+  styleUrl: './profile.css'
+})
+export class ProfileComponent {
+
+}
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Here, `CommonModule` provides commonly used Angular features such as:
 
-```bash
-ng generate --help
+- `*ngIf` – conditionally displays HTML elements.
+- `*ngFor` – repeats HTML elements.
+- Other common Angular directives and pipes.
+
+If you use `imports: []`, it means you haven't imported any additional Angular features into this component.
+
+Example:
+
+If your HTML contains:
+
+HTMLWrap linesCopy codePreview
+
+```html
+<h1>Welcome to my profile</h1>
 ```
 
-## Building
+You don't need any additional imports because this is normal HTML.
 
-To build the project run:
+But if you use Angular directives such as `*ngIf`, you need the appropriate imports.
 
-```bash
-ng build
+## 2. `selector: 'app-profile'`
+
+Meaning: Defines the custom HTML tag used to display your Angular component.
+
+Think of a selector as the component's name in HTML.
+
+For example:
+
+typescript
+
+```typescript
+selector: 'app-profile'
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+You can use this component in another component's HTML like this:
 
-## Running unit tests
+HTMLWrap linesCopy codePreview
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```html
+<app-profile></app-profile>
 ```
 
-## Running end-to-end tests
+Angular recognizes this tag and displays the content of the ProfileComponent.
 
-For end-to-end (e2e) testing, run:
+Example:
 
-```bash
-ng e2e
+Suppose your `profile.html` contains:
+
+HTMLWrap linesCopy codePreview
+
+```html
+<h1>My Profile</h1>
+<p>Welcome to my profile page!</p>
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+And another component has:
 
-## Additional Resources
+HTMLWrap linesCopy codePreview
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```html
+<app-profile></app-profile>
+```
+
+The output will be:
+
+## My Profile
+
+Welcome to my profile page\!
+
+In simple words: `selector` tells Angular which HTML tag represents your component.
+
+## 3. `standalone: true`
+
+Meaning: Tells Angular that this component is a standalone component.
+
+Before standalone components were introduced, Angular components generally needed to be registered inside an `NgModule`.
+
+For example, older Angular applications used:
+
+typescript
+
+```typescript
+@NgModule({
+  declarations: [ProfileComponent],
+  imports: [CommonModule]
+})
+export class AppModule {
+
+}
+```
+
+But with:
+
+typescript
+
+```typescript
+standalone: true
+```
+
+You don't need to declare the component inside an Angular module.
+
+You can directly import the component wherever you need it.
+
+For example:
+
+typescript
+
+```typescript
+import { ProfileComponent } from './profile/profile';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [ProfileComponent],
+  template: `<app-profile></app-profile>`
+})
+export class AppComponent {
+
+}
+```
+
+Advantages of standalone components:
+
+- Less module configuration.
+- Easier component reuse.
+- Simpler application structure.
+- Easier lazy loading.
+- Better organization of Angular applications.
+
+In simple words: `standalone: true` means the component can work independently without being declared in an NgModule.
+
+## 4. `templateUrl: './profile.html'`
+
+Meaning: Specifies the external HTML file that contains the component's user interface.
+
+For example:
+
+typescript
+
+```typescript
+templateUrl: './profile.html'
+```
+
+This tells Angular to find the HTML file named `profile.html` in the same folder as the component TypeScript file.
+
+Your folder structure might look like this:
+
+profile/
+
+profile.ts Component logic
+
+profile.html UI design
+
+profile.css Styling
+
+Example of `profile.html`:
+
+HTMLWrap linesCopy codePreview
+
+```html
+<h1>My Profile</h1>
+<p>This is my profile component.</p>
+<button>View Profile</button>
+```
+
+Angular loads this HTML and displays it whenever the component is used.
+
+In simple words: `templateUrl` tells Angular where your component's HTML code is located.
+
+## 5. `styleUrl: './profile.css'`
+
+Meaning: Specifies the external CSS file used to style the component.
+
+For example:
+
+typescript
+
+```typescript
+styleUrl: './profile.css'
+```
+
+This tells Angular to load the CSS styles from `profile.css`.
+
+Example of `profile.css`:
+
+css
+
+```css
+h1 {
+  color: blue;
+  font-size: 30px;
+}
+
+p {
+  color: gray;
+}
+
+button {
+  background-color: green;
+  color: white;
+  padding: 10px;
+}
+```
+
+These styles apply to the HTML elements in your component.
+
+In simple words: `styleUrl` tells Angular where the component's CSS styling is located.
+
+Note: Angular also supports `styleUrls` (plural), which accepts an array of CSS file paths.
+
+## 6. How everything works together
+
+Let's understand the complete flow.
+
+profile.ts
+
+Component configuration and logic
+
+Loads
+
+profile.html
+
+User interface
+
+profile.css
+
+Design and styling
+
+Angular combines them
+
+Rendered Profile Component
+
+The final UI displayed in the browser
+
+## 7. Complete Angular example
+
+Here is how all these properties look together:
+
+profile.ts
+
+typescript
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-profile',
+  standalone: true,
+  imports: [],
+  templateUrl: './profile.html',
+  styleUrl: './profile.css'
+})
+export class ProfileComponent {
+
+  username = 'John';
+
+}
+```
+
+profile.html
+
+HTMLWrap linesCopy codePreview
+
+```html
+<h1>Welcome {{ username }}</h1>
+<p>This is my profile page.</p>
+```
+
+profile.css
+
+css
+
+```css
+h1 {
+  color: blue;
+}
+
+p {
+  font-size: 18px;
+}
+```
+
+### Quick revision
+
+| Property | Purpose |
+| --- | --- |
+| `imports` | Imports components, directives and pipes |
+| `selector` | Defines the custom HTML tag |
+| `standalone` | Allows the component to work without NgModule declaration |
+| `templateUrl` | Specifies the HTML file |
+| `styleUrl` | Specifies the CSS file |
+
+One important thing to remember:
+
+- `.ts` → What the component does (logic).
+- `.html` → What the component displays (structure).
+- `.css` → How the component looks (design).
+
+Together, these three files form an Angular component.
